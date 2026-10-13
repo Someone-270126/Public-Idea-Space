@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b14">
+  <meta name="description" content="Ruang publik untuk ide, masukan, dan inspirasi tentang teknologi yang bisa membuat hidup lebih mudah.">
+  <title>IDEA SPACE — Ideas for a better future</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/config.js"></script><script defer src="assets/app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar wrap">
+    <a class="brand" href="#"><span class="brand-mark">✳</span><span>IDEA<span class="brand-accent">SPACE</span><small>OPEN IDEAS. BETTER FUTURE.</small></span></a>
+    <a class="nav-link" href="#idea-wall">Jelajahi ide <span>↗</span></a>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow"><span class="pulse"></span> RUANG TERBUKA UNTUK MASA DEPAN</div>
+      <h1>Kalau teknologi bisa mewujudkan <span>satu hal</span> untukmu,<br class="desktop"> apa itu?</h1>
+      <p class="hero-copy">Setiap perubahan besar berawal dari sebuah pertanyaan. Bagikan masalah yang ingin kamu pecahkan, ide yang ingin diwujudkan, atau hal yang ingin dibuat lebih mudah.</p>
+      <div class="hero-meta"><span>◈ Tanpa akun</span><span>◈ Ide ditinjau sebelum terbit</span><span>◈ Suara semua orang berarti</span></div>
+    </section>
+    <section class="submit-grid" id="share">
+      <div class="section-intro">
+        <div class="eyebrow">01 / BAGIKAN GAGASAN</div><h2>Ide kecil.<br><span>Kemungkinan besar.</span></h2>
+        <p>Kamu tidak harus punya solusi lengkap. Ceritakan saja kebutuhan, hambatan, atau bayangan tentang masa depan yang ingin kamu lihat.</p>
+        <div class="note-card"><span class="note-icon">↗</span><p>Kiriman akan ditinjau terlebih dahulu agar ruang ini tetap aman, relevan, dan bermanfaat.</p></div>
+      </div>
+      <form id="idea-form" class="idea-form">
+        <label for="category">Kategori</label>
+        <select id="category" required><option>Teknologi</option><option>Pendidikan</option><option>Kehidupan sehari-hari</option><option>Lingkungan</option><option>Kesehatan dan aksesibilitas</option><option>Bisnis dan pekerjaan</option><option>Lainnya</option></select>
+        <label for="title">Judul ide <span class="optional">— singkat dan jelas</span></label>
+        <input id="title" maxlength="100" required placeholder="Contoh: Belajar jadi lebih mudah untuk semua">
+        <label for="body">Ceritakan idemu <span class="optional">— maks. 1.500 karakter</span></label>
+        <textarea id="body" rows="5" maxlength="1500" required placeholder="Masalah apa yang ingin kamu selesaikan? Apa yang ingin kamu wujudkan?"></textarea>
+        <div class="form-row"><div class="name-field"><label for="author">Nama samaran <span class="optional">— opsional</span></label><input id="author" maxlength="40" placeholder="Mis. Pemikir Masa Depan"></div><div class="char-count" id="char-count">0 / 1500</div></div>
+        <div class="honeypot" aria-hidden="true"><label for="website">Jangan isi ini</label><input id="website" tabindex="-1" autocomplete="off"></div>
+        <label class="consent"><input type="checkbox" id="consent" required><span>Saya tidak membagikan informasi pribadi orang lain dan mengizinkan ide ini ditinjau sebelum ditampilkan secara publik.</span></label>
+        <button class="submit-btn" type="submit"><span>Kirim ide</span><span>↗</span></button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite">Kiriman yang disetujui akan tampil di Idea Wall.</p>
+      </form>
+    </section>
+    <section class="wall" id="idea-wall">
+      <div class="wall-heading"><div><div class="eyebrow">02 / IDE DARI KOMUNITAS</div><h2>Idea wall<span class="dot">.</span></h2><p>Perspektif berbeda bisa memantik solusi yang belum pernah terpikirkan.</p></div><div class="live-pill"><span class="pulse"></span> IDE TERBIT</div></div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-category="Semua">Semua ide</button><button class="filter" data-category="Teknologi">Teknologi</button><button class="filter" data-category="Pendidikan">Pendidikan</button><button class="filter" data-category="Kehidupan sehari-hari">Kehidupan sehari-hari</button><button class="filter" data-category="Lingkungan">Lingkungan</button><button class="filter" data-category="Lainnya">Lainnya</button>
+      </div>
+      <div class="idea-grid" id="idea-list"><article class="empty-state"><span class="empty-symbol">✳</span><h3>Ruang ini menunggu ide pertamamu.</h3><p>Jadilah salah satu orang pertama yang menyalakan percakapan.</p><a href="#share">Bagikan ide pertama ↗</a></article></div>
+      <p class="wall-status" id="wall-status">Menghubungkan ke ruang ide…</p>
+    </section>
+  </main>
+  <footer class="footer wrap"><a class="brand small-brand" href="#"><span class="brand-mark">✳</span><span>IDEA<span class="brand-accent">SPACE</span><small>IDEAS ARE A STARTING POINT.</small></span></a><p>Dibuat untuk ide yang layak didengar. <span>© IDEA SPACE</span></p></footer>
+</body></html>
