@@ -1,64 +1,82 @@
-# Setup dan publikasi IDEA SPACE
+# Konfigurasi dan publikasi
 
-Panduan ini menghubungkan frontend GitHub Pages ke Supabase Free. Nama menu di dashboard dapat berubah sedikit.
+Dokumen ini menjelaskan cara menghubungkan IDEA SPACE ke Supabase dan menerbitkannya melalui GitHub Pages. Kerjakan langkah-langkah berikut secara berurutan.
 
-## 1. Buat proyek Supabase
-1. Buka https://supabase.com/ dan buat akun/proyek baru.
-2. Pilih organisasi, nama proyek (misalnya `idea-space`), password database yang kuat, dan region yang dekat dengan audiens.
-3. Tunggu proyek selesai dibuat.
+## 1. Siapkan Supabase
 
-## 2. Buat tabel dan aturan keamanan
-1. Buka proyek Supabase → **SQL Editor** → **New query**.
-2. Buka file `supabase/schema.sql` dari paket ini, salin seluruh isinya ke SQL Editor, lalu jalankan.
-3. Di **Table Editor**, pastikan tabel `ideas` terbentuk.
-4. Kebijakan yang dibuat:
-   - pengunjung anonim hanya bisa membaca baris berstatus `approved`;
-   - pengunjung bisa mengirim baris baru hanya jika statusnya `pending`;
-   - tidak ada izin publik untuk mengubah status atau menghapus ide.
-5. Jangan pernah memasukkan service-role/secret key ke frontend atau GitHub.
+1. Buat proyek di [Supabase](https://supabase.com/).
+2. Setelah proyek siap, buka **SQL Editor**.
+3. Buat query baru, salin seluruh isi `supabase/schema.sql`, lalu jalankan.
+4. Buka **Table Editor** dan pastikan tabel `public.ideas` sudah tersedia.
 
-## 3. Hubungkan website ke Supabase
-1. Buka **Project Settings → API** (atau bagian API Keys).
-2. Salin **Project URL**.
-3. Salin **publishable key**. Pada proyek lama, gunakan `anon` public key. Jangan gunakan `service_role` atau secret key.
-4. Edit `assets/config.js`:
-   ```js
-   window.IDEA_SPACE_CONFIG = {
-     SUPABASE_URL: "https://PROJECT_REF.supabase.co",
-     SUPABASE_PUBLISHABLE_KEY: "sb_publishable_..."
-   };
-   ```
-5. Simpan file. Publishable/anon key memang digunakan oleh browser; keamanan data bergantung pada Row Level Security (RLS), bukan menyembunyikan key.
+Skema dan kebijakan akses perlu memastikan bahwa pengunjung anonim hanya dapat mengirim ide baru dengan status `pending` dan hanya membaca ide berstatus `approved`. Pengunjung tidak boleh memperoleh izin publik untuk mengubah status atau menghapus kiriman.
 
-## 4. Uji lokal
-Buka `index.html` di browser untuk pratinjau tampilan. Untuk pengujian penuh, lebih baik gunakan local static server atau langsung deploy ke GitHub Pages karena beberapa browser membatasi file lokal. Kirim satu ide uji dan pastikan pesan menyatakan kiriman menunggu peninjauan. Ide pending tidak boleh terlihat di Idea Wall.
+## 2. Atur koneksi frontend
 
-## 5. Moderasi kiriman
-1. Buka Supabase → **Table Editor → ideas**.
-2. Lihat kiriman dengan `status = pending`.
-3. Tinjau konten. Untuk menyetujui, ubah status menjadi `approved`; untuk menolak, ubah menjadi `rejected`.
-4. Hanya kiriman approved akan tampil. Moderasi dilakukan melalui dashboard admin Supabase, bukan halaman publik.
+1. Dari pengaturan proyek Supabase, buka bagian API.
+2. Salin **Project URL** dan **publishable key**. Pada proyek lama, `anon` key publik dapat digunakan.
+3. Buka `assets/config.js` dan isi nilai konfigurasi sesuai format yang sudah ada di file tersebut.
+4. Simpan perubahan.
 
-## 6. Deploy ke GitHub Pages
-1. Buat repository baru di https://github.com/new (misalnya `idea-space`).
-2. Upload semua file dan folder dari paket ini ke root repository. Jangan upload folder zip-nya sebagai satu file; ekstrak dahulu.
-3. Di repository, buka **Settings → Pages**.
-4. Pada **Build and deployment**, pilih **Deploy from a branch**.
-5. Pilih branch `main`, folder `/(root)`, lalu **Save**.
-6. Tunggu GitHub Pages menerbitkan situs. URL biasanya `https://USERNAME.github.io/idea-space/`.
-7. Buka URL itu, uji pengiriman, dan pastikan kiriman hanya muncul setelah status disetujui.
+Gunakan hanya publishable/anon key di frontend. Jangan gunakan `service_role` key atau secret key di `config.js`, HTML, JavaScript, maupun file lain yang dipublikasikan.
 
-## 7. Pemeriksaan keamanan sebelum dibagikan
-- Pastikan RLS aktif dan kedua policy pada `supabase/schema.sql` benar.
-- Jangan membuat policy publik untuk `UPDATE`, `DELETE`, atau membaca semua baris.
-- Jangan menaruh key admin/secret di file apa pun di repository.
-- Pertimbangkan CAPTCHA/anti-bot dan pembatasan laju sebelum promosi besar. Honeypot sederhana di form bukan perlindungan kuat.
-- Hindari meminta email, nomor telepon, atau data pribadi yang tidak diperlukan.
-- Sediakan proses untuk menghapus konten yang mengandung data pribadi atau spam.
-- Supabase Free memiliki kuota dan ketentuan yang bisa berubah; cek halaman pricing resmi sebelum dipakai luas.
+## 3. Publikasikan melalui GitHub Pages
 
-## Troubleshooting
-- **"Hubungkan Supabase"**: `assets/config.js` belum diisi, atau URL/key salah.
-- **Form gagal**: pastikan SQL dijalankan, key benar, dan policy `INSERT` memberi `anon` akses hanya untuk `status = pending`.
-- **Idea Wall kosong**: itu normal sebelum ada kiriman yang disetujui.
-- **Kiriman pending terlihat publik**: hentikan publikasi sementara dan periksa policy SELECT. Policy harus `using (status = 'approved')`.
+1. Pastikan `index.html` berada di root repository.
+2. Pastikan folder `assets/` dan `supabase/` ikut berada di root dengan struktur yang benar.
+3. Push atau unggah perubahan ke branch `main`.
+4. Di GitHub, buka **Settings → Pages**.
+5. Pada bagian build and deployment, pilih **Deploy from a branch**, lalu pilih branch `main` dan folder `/(root)`.
+6. Simpan pengaturan dan tunggu proses deployment selesai.
+7. Buka URL GitHub Pages yang diberikan oleh repository.
+
+Jangan unggah file ZIP sebagai pengganti isi proyek. Ekstrak paket terlebih dahulu agar `index.html` dan folder aset berada pada lokasi yang diharapkan.
+
+## 4. Uji alur kiriman
+
+Lakukan pengujian dari URL publik:
+
+1. Kirim satu ide percobaan dengan judul yang mudah dikenali.
+2. Buka Supabase → **Table Editor → ideas**.
+3. Pastikan data masuk dan statusnya `pending`.
+4. Pastikan ide pending belum muncul di Idea Wall.
+5. Setelah meninjau isi kiriman, ubah status menjadi `approved`.
+6. Muat ulang website dan pastikan ide tampil di Idea Wall.
+7. Uji satu kiriman dengan status `rejected` dan pastikan kiriman tersebut tidak tampil.
+
+Pengelolaan status dilakukan melalui dashboard Supabase. Jangan membuat tombol moderasi di halaman publik tanpa sistem autentikasi dan otorisasi khusus.
+
+## 5. Pemeriksaan sebelum situs dibagikan
+
+- Pastikan Row Level Security aktif pada tabel `public.ideas`.
+- Pastikan policy `SELECT` hanya mengizinkan ide berstatus `approved`.
+- Pastikan policy `INSERT` hanya menerima kiriman baru berstatus `pending`.
+- Pastikan tidak ada policy publik yang memberi akses `UPDATE` atau `DELETE`.
+- Pastikan tidak ada secret key di repository.
+- Periksa tampilan pada ponsel dan desktop.
+- Uji pengiriman, moderasi, filter kategori, dan keadaan Idea Wall saat kosong.
+- Siapkan prosedur untuk meninjau spam atau kiriman yang memuat informasi pribadi.
+
+Honeypot pada formulir hanya membantu menyaring sebagian bot. Sebelum situs dipromosikan ke audiens luas, pertimbangkan CAPTCHA atau proteksi anti-bot dan pembatasan laju pengiriman. Periksa juga kuota dan ketentuan Supabase yang berlaku untuk proyek Anda.
+
+## Pemecahan masalah
+
+**Formulir menyatakan konfigurasi Supabase belum tersedia**
+- Periksa `assets/config.js`.
+- Pastikan URL proyek dan publishable/anon key benar.
+- Pastikan file konfigurasi berhasil dipublikasikan ke GitHub Pages.
+
+**Kiriman gagal disimpan**
+- Pastikan `supabase/schema.sql` sudah dijalankan.
+- Periksa kebijakan RLS untuk operasi `INSERT`.
+- Pastikan kiriman publik hanya dapat dibuat dengan status `pending`.
+
+**Idea Wall kosong**
+- Periksa apakah sudah ada kiriman dengan status `approved`.
+- Kiriman `pending` dan `rejected` memang tidak ditampilkan.
+- Periksa Console browser jika ada kesalahan JavaScript atau permintaan Supabase.
+
+**Ide berstatus `approved` tidak tampil**
+- Pastikan perubahan status sudah tersimpan.
+- Muat ulang halaman.
+- Periksa permintaan baca ke Supabase dan policy `SELECT` jika masalah berlanjut.
